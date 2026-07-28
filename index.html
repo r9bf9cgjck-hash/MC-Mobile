@@ -5,76 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MC Mobile</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Быстрые фиксы для меню */
-        #menu {
-            display: none !important;
-        }
-        #menu.active {
-            display: flex !important;
-        }
-        #splash-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-    </style>
 </head>
 <body>
-    <div id="game-wrapper">
-        <!-- ОБЛОЖКА -->
-        <div id="splash-screen">
-            <div class="splash-content">
-                <img src="https://i.ibb.co/tpCDN1BQ/68C31D01-A107-46B8-9B73-01956509E301.webp" alt="MC Mobile">
-                <button id="splash-btn">▶️ НАЧАТЬ</button>
-            </div>
+<div id="game-wrapper">
+    <!-- ОБЛОЖКА -->
+    <div id="splash-screen">
+        <div class="splash-content">
+            <img src="https://i.ibb.co/tpCDN1BQ/68C31D01-A107-46B8-9B73-01956509E301.webp" alt="MC Mobile">
+            <button id="splash-btn">▶️ НАЧАТЬ</button>
         </div>
-
-        <!-- МЕНЮ -->
-        <div id="menu">
-            <div class="logo">⚽ MC<br><small>MOBILE</small></div>
-            
-            <div class="mode-select">
-                <button class="mode-btn active" data-mode="2v2">2×2</button>
-                <button class="mode-btn" data-mode="3v3">3×3</button>
-            </div>
-
-            <div style="font-size:0.7rem; color:#555; margin:6px 0; letter-spacing:0.5px;">ВЫБЕРИ ИГРОКА</div>
-            <div class="players" id="player-list"></div>
-
-            <div class="difficulty">
-                <button class="diff-btn" data-diff="easy" disabled>🟢 Лёгкий</button>
-                <button class="diff-btn" data-diff="medium" disabled>🟡 Средний</button>
-                <button class="diff-btn" data-diff="hard" disabled>🔴 Сложный</button>
-                <button class="diff-btn" data-diff="extreme" disabled>🔥 Хардкор</button>
-            </div>
-
-            <button id="startBtn" disabled>⚔️ НАЧАТЬ МАТЧ</button>
-        </div>
-
-        <!-- ХОЛСТ -->
-        <canvas id="gameCanvas" width="600" height="800"></canvas>
-
-        <!-- ИГРОВОЙ ИНТЕРФЕЙС -->
-        <div id="scoreboard"><div id="scoreA">0</div><div id="scoreB">0</div></div>
-        <div id="timer">⏱️ 1:00</div>
-        <div id="matchScore">⚽ Счёт матча: 0 : 0</div>
-        <div id="winner"><span class="cup">🏆</span>ПОБЕДА!</div>
-        <button id="restartBtn">🔁 Играть снова</button>
-        <button id="menuBtn">🏠 В меню</button>
-
-        <!-- УПРАВЛЕНИЕ -->
-        <div id="joystick-area"><div id="joystick-knob"></div></div>
-        <div class="action-btn" id="kick-btn"><span class="icon">⚽</span><span class="label">Удар</span></div>
-        <div class="action-btn" id="pass-btn"><span class="icon">🎯</span><span class="label">Пас</span></div>
-        <div class="action-btn" id="tackle-btn"><span class="icon">🛡️</span><span class="label">Отбор</span></div>
-
-        <div id="notification"><div id="notifText">🎉</div><div class="sub" id="notifSub"></div></div>
     </div>
 
-    <script src="players.js"></script>
-    <script src="physics.js"></script>
-    <script src="bot.js"></script>
-    <script src="ui.js"></script>
-    <script src="game.js"></script>
+    <!-- МЕНЮ -->
+    <div id="menu">
+        <div class="logo">⚽ MC<br><small>MOBILE</small></div>
+        <div class="mode-select">
+            <button class="mode-btn active" data-mode="2v2">2×2</button>
+            <button class="mode-btn" data-mode="3v3">3×3</button>
+        </div>
+        <div style="font-size:0.7rem; color:#555; margin:6px 0; letter-spacing:0.5px;">ВЫБЕРИ ИГРОКА</div>
+        <div class="players" id="player-list"></div>
+        <div class="difficulty">
+            <button class="diff-btn" data-diff="easy" disabled>🟢 Лёгкий</button>
+            <button class="diff-btn" data-diff="medium" disabled>🟡 Средний</button>
+            <button class="diff-btn" data-diff="hard" disabled>🔴 Сложный</button>
+            <button class="diff-btn" data-diff="extreme" disabled>🔥 Хардкор</button>
+        </div>
+        <button id="startBtn" disabled>⚔️ НАЧАТЬ МАТЧ</button>
+    </div>
+
+    <!-- ХОЛСТ -->
+    <canvas id="gameCanvas" width="600" height="800"></canvas>
+
+    <!-- ИГРОВОЙ ИНТЕРФЕЙС -->
+    <div id="scoreboard"><div id="scoreA">0</div><div id="scoreB">0</div></div>
+    <div id="timer">⏱️ 1:00</div>
+    <div id="matchScore">⚽ Счёт матча: 0 : 0</div>
+    <div id="winner"><span class="cup">🏆</span>ПОБЕДА!</div>
+    <button id="restartBtn">🔁 Играть снова</button>
+    <button id="menuBtn">🏠 В меню</button>
+
+    <!-- УПРАВЛЕНИЕ -->
+    <div id="joystick-area"><div id="joystick-knob"></div></div>
+    <div class="action-btn" id="kick-btn"><span class="icon">⚽</span><span class="label">Удар</span></div>
+    <div class="action-btn" id="pass-btn"><span class="icon">🎯</span><span class="label">Пас</span></div>
+    <div class="action-btn" id="tackle-btn"><span class="icon">🛡️</span><span class="label">Отбор</span></div>
+
+    <div id="notification"><div id="notifText">🎉</div><div class="sub" id="notifSub"></div></div>
+</div>
+
+<script src="players.js"></script>
+<script src="physics.js"></script>
+<script src="bot.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
