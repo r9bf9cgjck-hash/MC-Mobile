@@ -1,9 +1,8 @@
 // ============================================================
 //  MC MOBILE — game.js (ГЛАВНЫЙ МОДУЛЬ)
-//  Управляет игровым циклом, состоянием и таймером
 // ============================================================
 
-// ---------- СОСТОЯНИЕ ИГРЫ ----------
+// ---------- СОСТОЯНИЕ ----------
 const GameState = {
     MENU: 'menu',
     PLAYING: 'playing',
@@ -23,12 +22,11 @@ let game = {
     selectedMode: '2v2'
 };
 
-// ---------- ЭЛЕМЕНТЫ DOM (будут заполнены при инициализации) ----------
+// ---------- ЭЛЕМЕНТЫ ----------
 const DOM = {};
 
 // ---------- ИНИЦИАЛИЗАЦИЯ ----------
 function initGame() {
-    // Заполняем DOM ссылками на элементы
     DOM.canvas = document.getElementById('gameCanvas');
     DOM.ctx = DOM.canvas.getContext('2d');
     DOM.menu = document.getElementById('menu');
@@ -44,14 +42,12 @@ function initGame() {
     DOM.notifText = document.getElementById('notifText');
     DOM.notifSub = document.getElementById('notifSub');
 
-    // Устанавливаем размеры холста
     DOM.canvas.width = 600;
     DOM.canvas.height = 800;
 
-    // Загружаем сохранения (если есть)
     loadProgress();
 
-    // Строим меню игроков
+    // Строим меню
     if (typeof buildPlayerMenu === 'function') {
         buildPlayerMenu();
     }
@@ -71,14 +67,19 @@ function gameLoop() {
 
 // ---------- ОБНОВЛЕНИЕ ----------
 function update() {
+    // Если игра активна
     if (game.state === GameState.PLAYING && game.matchActive) {
-        // Если есть функция updatePhysics — вызываем её
-        if (typeof updatePhysics === 'function') {
-            updatePhysics();
+        // Обновляем игроков (джойстик)
+        if (typeof updatePlayer === 'function') {
+            updatePlayer();
         }
-        // Если есть функция updateBots — вызываем её
+        // Обновляем ботов
         if (typeof updateBots === 'function') {
             updateBots();
+        }
+        // Обновляем физику мяча
+        if (typeof updatePhysics === 'function') {
+            updatePhysics();
         }
     }
 }
@@ -86,24 +87,27 @@ function update() {
 // ---------- ОТРИСОВКА ----------
 function render() {
     const ctx = DOM.ctx;
-    const W = DOM.canvas.width;
-    const H = DOM.canvas.height;
+    const W = 600;
+    const H = 800;
 
-    // Очищаем холст
     ctx.clearRect(0, 0, W, H);
 
     // Рисуем поле
     drawField(ctx, W, H);
 
-    // Если есть игроки — рисуем их
-    if (typeof allPlayers !== 'undefined' && allPlayers.length > 0) {
-        for (let p of allPlayers) {
-            drawPlayer(ctx, p);
-        }
-        // Рисуем мяч
-        drawBall(ctx, ball);
-    } else {
-        // Если игроков нет — показываем заглушку
+    // Рисуем игроков
+    const players = window.allPlayers || [];
+    for (let p of players) {
+        drawPlayer(ctx, p);
+    }
+
+    // Рисуем мяч
+    if (window.ball) {
+        drawBall(ctx, window.ball);
+    }
+
+    // Если игра не началась
+    if (!game.matchActive && game.state === GameState.MENU) {
         ctx.fillStyle = 'rgba(255,255,255,0.1)';
         ctx.font = '24px sans-serif';
         ctx.textAlign = 'center';
@@ -113,14 +117,12 @@ function render() {
 
 // ---------- РИСОВАНИЕ ПОЛЯ ----------
 function drawField(ctx, W, H) {
-    // Градиент поля
     const grad = ctx.createRadialGradient(W/2, H/2, 40, W/2, H/2, 450);
     grad.addColorStop(0, '#2a2a4a');
     grad.addColorStop(1, '#16162a');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
 
-    // Разметка
     ctx.strokeStyle = 'rgba(255,255,255,0.06)';
     ctx.lineWidth = 2;
     ctx.setLineDash([6, 12]);
@@ -134,7 +136,6 @@ function drawField(ctx, W, H) {
     ctx.arc(W/2, H/2, 55, 0, Math.PI*2);
     ctx.stroke();
 
-    // Ворота
     const GOAL_H = 80;
     const goalA = { x: 15, y: H/2 - GOAL_H/2, w: 16, h: GOAL_H };
     const goalB = { x: W-31, y: H/2 - GOAL_H/2, w: 16, h: GOAL_H };
@@ -147,13 +148,13 @@ function drawField(ctx, W, H) {
     ctx.strokeRect(goalB.x, goalB.y, goalB.w, goalB.h);
     ctx.fillRect(goalB.x, goalB.y, goalB.w, goalB.h);
 
-    // Сохраняем ворота в глобальную переменную для других модулей
     window.goalA = goalA;
     window.goalB = goalB;
 }
 
 // ---------- РИСОВАНИЕ ИГРОКА ----------
 function drawPlayer(ctx, p) {
+    if (!p) return;
     const isMy = p.isPlayer || false;
     const x = p.x || 0;
     const y = p.y || 0;
@@ -172,7 +173,7 @@ function drawPlayer(ctx, p) {
     ctx.stroke();
 
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    ctx.font = 'bold 13px system-ui, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.shadowColor = 'rgba(0,0,0,0.8)';
@@ -202,7 +203,6 @@ function drawPlayer(ctx, p) {
         ctx.fillText('🧤', x+r+10, y);
     }
 
-    // Если мяч у игрока
     if (p.hasBall) {
         ctx.strokeStyle = 'rgba(255,255,0,0.3)';
         ctx.lineWidth = 2;
@@ -234,7 +234,7 @@ function drawBall(ctx, ball) {
     ctx.fill();
 }
 
-// ---------- ТАЙМЕР МАТЧА ----------
+// ---------- ТАЙМЕР ----------
 function startMatchTimer() {
     if (game.timerInterval) clearInterval(game.timerInterval);
     game.timer = 60;
@@ -254,7 +254,7 @@ function startMatchTimer() {
     }, 1000);
 }
 
-// ---------- ЗАВЕРШЕНИЕ МАТЧА ----------
+// ---------- ЗАВЕРШЕНИЕ ----------
 function endMatch(winner) {
     game.matchActive = false;
     game.state = GameState.ENDED;
@@ -268,16 +268,10 @@ function endMatch(winner) {
         else result = 'draw';
     }
 
-    // Обновляем UI
     DOM.winnerDiv.innerHTML = `<span class="cup">🏆</span> ${result === 'win' ? 'ПОБЕДА!' : result === 'draw' ? 'НИЧЬЯ!' : 'ПОРАЖЕНИЕ!'}`;
     DOM.winnerDiv.style.display = 'block';
     DOM.restartBtn.style.display = 'block';
     DOM.menuBtn.style.display = 'block';
-
-    // Обновляем статистику
-    if (result === 'win') {
-        // Награды потом
-    }
 
     console.log(`🏁 Матч завершён: ${result}`);
 }
@@ -289,33 +283,62 @@ function updateScoreDisplay() {
     DOM.matchScore.innerText = `⚽ Счёт матча: ${game.scoreA} : ${game.scoreB}`;
 }
 
-// ---------- ЗАГРУЗКА СОХРАНЕНИЙ ----------
+// ---------- ЗАГРУЗКА ----------
 function loadProgress() {
     try {
         const data = JSON.parse(localStorage.getItem('mc_mobile_save'));
         if (data) {
-            // Здесь будем загружать сохранения позже
             console.log('💾 Загружены сохранения:', data);
         }
     } catch(e) {}
 }
 
+// ---------- ОБНОВЛЕНИЕ ИГРОКА (ДЖОЙСТИК) ----------
+function updatePlayer() {
+    const players = window.allPlayers || [];
+    const myPlayer = players.find(p => p.isPlayer);
+    if (!myPlayer) return;
+
+    const joystickX = window.joystickX || 0;
+    const joystickY = window.joystickY || 0;
+    const joystickActive = window.joystickActive || false;
+
+    if (joystickActive) {
+        const dist = Math.sqrt(joystickX*joystickX + joystickY*joystickY);
+        if (dist > 0.1) {
+            const speed = 5.2 * (1 + (myPlayer.rating - 50) * 0.08) * Math.min(1, dist * 2.2);
+            myPlayer.x += (joystickX / dist) * speed;
+            myPlayer.y += (joystickY / dist) * speed;
+        }
+    }
+
+    // Границы
+    myPlayer.x = Math.max(38, Math.min(562, myPlayer.x));
+    myPlayer.y = Math.max(38, Math.min(762, myPlayer.y));
+}
+
 // ---------- ЗАПУСК ----------
 document.addEventListener('DOMContentLoaded', function() {
-    // Сначала инициализируем обложку
     const splash = document.getElementById('splash-screen');
     const btn = document.getElementById('splash-btn');
+    const menu = document.getElementById('menu');
 
     if (splash && btn) {
         btn.addEventListener('click', function() {
             splash.classList.add('hidden');
             setTimeout(() => {
-                document.getElementById('menu').classList.add('active');
+                if (menu) menu.classList.add('active');
                 initGame();
+                // После инициализации запускаем UI
+                if (typeof initUI === 'function') {
+                    initUI();
+                }
             }, 800);
         });
     } else {
-        // Если обложки нет — сразу инициализируем
         initGame();
+        if (typeof initUI === 'function') {
+            initUI();
+        }
     }
 });
