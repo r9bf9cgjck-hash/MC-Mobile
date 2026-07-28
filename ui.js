@@ -1,18 +1,19 @@
 // ============================================================
-//  MC MOBILE — ui.js (ИНТЕРФЕЙС, ДЖОЙСТИК, КНОПКИ)
+//  MC MOBILE — ui.js (УПРАВЛЕНИЕ)
 // ============================================================
 
-// ---------- ЭЛЕМЕНТЫ УПРАВЛЕНИЯ ----------
 let joystickX = 0, joystickY = 0;
 let joystickActive = false;
 let joystickTouchId = null;
 
-// ---------- ИНИЦИАЛИЗАЦИЯ UI ----------
 function initUI() {
-    // ----- ДЖОЙСТИК -----
     const joystickArea = document.getElementById('joystick-area');
     const joystickKnob = document.getElementById('joystick-knob');
+    const kickBtn = document.getElementById('kick-btn');
+    const passBtn = document.getElementById('pass-btn');
+    const tackleBtn = document.getElementById('tackle-btn');
 
+    // ---------- ДЖОЙСТИК ----------
     if (joystickArea && joystickKnob) {
         joystickArea.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -79,46 +80,36 @@ function initUI() {
         const px = joystickX * maxDist;
         const py = joystickY * maxDist;
         joystickKnob.style.transform = `translate(${px - 22}px, ${py - 22}px)`;
+
+        // Обновляем глобальные переменные для game.js
+        window.joystickX = joystickX;
+        window.joystickY = joystickY;
+        window.joystickActive = joystickActive;
     }
 
-    // ----- КНОПКИ ДЕЙСТВИЙ -----
-    const kickBtn = document.getElementById('kick-btn');
-    const passBtn = document.getElementById('pass-btn');
-    const tackleBtn = document.getElementById('tackle-btn');
-
-    let kickPressed = false, passPressed = false, tacklePressed = false;
-
+    // ---------- КНОПКИ ----------
     if (kickBtn) {
         kickBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            kickPressed = true;
             handleKick();
         }, { passive: false });
-        kickBtn.addEventListener('touchend', () => { kickPressed = false; });
-        kickBtn.addEventListener('touchcancel', () => { kickPressed = false; });
     }
 
     if (passBtn) {
         passBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            passPressed = true;
             handlePass();
         }, { passive: false });
-        passBtn.addEventListener('touchend', () => { passPressed = false; });
-        passBtn.addEventListener('touchcancel', () => { passPressed = false; });
     }
 
     if (tackleBtn) {
         tackleBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            tacklePressed = true;
             handleTackle();
         }, { passive: false });
-        tackleBtn.addEventListener('touchend', () => { tacklePressed = false; });
-        tackleBtn.addEventListener('touchcancel', () => { tacklePressed = false; });
     }
 
-    // ----- КНОПКИ МЕНЮ -----
+    // ---------- КНОПКИ МЕНЮ ----------
     const startBtn = document.getElementById('startBtn');
     const restartBtn = document.getElementById('restartBtn');
     const menuBtn = document.getElementById('menuBtn');
@@ -131,7 +122,7 @@ function initUI() {
             kickBtn.style.display = 'flex';
             passBtn.style.display = 'flex';
             tackleBtn.style.display = 'flex';
-            
+
             if (typeof initPlayers === 'function') {
                 window.allPlayers = initPlayers();
             }
@@ -141,7 +132,7 @@ function initUI() {
             if (typeof startMatchTimer === 'function') {
                 startMatchTimer();
             }
-            
+
             window.game.matchActive = true;
             window.game.state = 'playing';
             window.game.scoreA = 0;
@@ -195,7 +186,7 @@ function initUI() {
         });
     }
 
-    // ----- ВЫБОР РЕЖИМА -----
+    // ---------- ВЫБОР РЕЖИМА ----------
     document.querySelectorAll('.mode-btn').forEach(el => {
         el.addEventListener('click', function() {
             document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -204,7 +195,7 @@ function initUI() {
         });
     });
 
-    // ----- ВЫБОР СЛОЖНОСТИ -----
+    // ---------- ВЫБОР СЛОЖНОСТИ ----------
     document.querySelectorAll('.diff-btn').forEach(el => {
         el.addEventListener('click', function() {
             document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
@@ -216,7 +207,7 @@ function initUI() {
     console.log('✅ UI инициализирован');
 }
 
-// ---------- ОБРАБОТЧИК УДАРА ----------
+// ---------- УДАР ----------
 function handleKick() {
     const myPlayer = window.allPlayers?.find(p => p.isPlayer);
     if (!myPlayer || !window.ballController || window.ballController !== myPlayer) return;
@@ -228,13 +219,13 @@ function handleKick() {
     window.ball.vy = Math.sin(angle) * power * (0.9 + Math.random() * 0.2);
     window.ballController = null;
     myPlayer.hasBall = false;
-    
+
     if (typeof showNotification === 'function') {
         showNotification('⚡ Удар!', 'Сила: ' + (power * 0.8).toFixed(1));
     }
 }
 
-// ---------- ОБРАБОТЧИК ПАСА ----------
+// ---------- ПАС ----------
 function handlePass() {
     const myPlayer = window.allPlayers?.find(p => p.isPlayer);
     if (!myPlayer || !window.ballController || window.ballController !== myPlayer) return;
@@ -270,7 +261,7 @@ function handlePass() {
     }
 }
 
-// ---------- ОБРАБОТЧИК ОТБОРА ----------
+// ---------- ОТБОР ----------
 function handleTackle() {
     const myPlayer = window.allPlayers?.find(p => p.isPlayer);
     if (!myPlayer || !window.game?.matchActive) return;
@@ -322,7 +313,7 @@ function showNotification(text, sub = '') {
     const notifText = document.getElementById('notifText');
     const notifSub = document.getElementById('notifSub');
     if (!notifDiv || !notifText) return;
-    
+
     notifText.innerText = text;
     if (notifSub) notifSub.innerText = sub;
     notifDiv.style.display = 'block';
@@ -332,10 +323,11 @@ function showNotification(text, sub = '') {
     }, 2600);
 }
 
-// ---------- ЗАПУСК UI ----------
+// ---------- ЗАПУСК ----------
 document.addEventListener('DOMContentLoaded', function() {
-    // Ждём, пока game.js инициализируется
     setTimeout(() => {
-        initUI();
-    }, 100);
+        if (typeof initUI === 'function') {
+            initUI();
+        }
+    }, 200);
 });
