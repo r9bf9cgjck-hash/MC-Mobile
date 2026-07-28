@@ -1,0 +1,616 @@
+/* ============================================================
+   MC MOBILE — СТИЛИ
+   ============================================================ */
+
+/* ----- ОБЩИЕ СБРОСЫ ----- */
+* {
+    margin: 0;
+    padding: 0;
+    touch-action: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a12;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    color: #fff;
+}
+
+#game-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 600px;
+    max-height: 850px;
+    background: #0a0a12;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+}
+
+canvas {
+    background: #1a1a2e;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    border: 2px solid #2a2a4a;
+}
+
+/* ============================================================
+   ОБЛОЖКА (SPLASH SCREEN)
+   ============================================================ */
+#splash-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #0a0a12;
+    z-index: 100;
+    transition: opacity 0.8s ease;
+    padding: 20px;
+}
+
+#splash-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.splash-content {
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.splash-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 0 60px rgba(255, 215, 0, 0.10);
+    margin-bottom: 24px;
+}
+
+#splash-btn {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    border: none;
+    color: #1a1a2e;
+    padding: 16px 48px;
+    border-radius: 60px;
+    font-size: 1.3rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 40px rgba(255, 215, 0, 0.15);
+    letter-spacing: 0.5px;
+}
+
+#splash-btn:active {
+    transform: scale(0.94);
+}
+
+/* ============================================================
+   МЕНЮ
+   ============================================================ */
+#menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(10, 10, 18, 0.96);
+    backdrop-filter: blur(16px);
+    z-index: 10;
+    color: #fff;
+    border-radius: 20px;
+    padding: 24px 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+#menu.active {
+    display: flex;
+}
+
+.logo {
+    font-size: 2.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    line-height: 1.1;
+    margin-bottom: 4px;
+    letter-spacing: -0.5px;
+}
+
+.logo small {
+    font-size: 0.7rem;
+    display: block;
+    -webkit-text-fill-color: #666;
+    color: #666;
+    letter-spacing: 2px;
+}
+
+/* ----- ВЫБОР РЕЖИМА ----- */
+.mode-select {
+    display: flex;
+    gap: 14px;
+    margin: 12px 0;
+}
+
+.mode-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 10px 28px;
+    color: #888;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mode-btn.active {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.06);
+    color: #ffd700;
+}
+
+.mode-btn:active {
+    transform: scale(0.94);
+}
+
+/* ----- ВЫБОР ИГРОКА ----- */
+.players {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 380px;
+    margin: 6px 0;
+}
+
+.player-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 12px 4px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #888;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.player-card:active {
+    transform: scale(0.94);
+    background: rgba(255, 215, 0, 0.06);
+    border-color: #ffd700;
+}
+
+.player-card .number {
+    font-size: 1.8rem;
+    display: block;
+    color: #ffd700;
+    font-weight: 900;
+}
+
+.player-card .rating {
+    font-size: 0.7rem;
+    display: block;
+    color: #555;
+}
+
+.player-card .name {
+    font-size: 0.7rem;
+    color: #aaa;
+}
+
+.player-card.selected {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.06);
+    color: #fff;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.05);
+}
+
+/* ----- СЛОЖНОСТЬ ----- */
+.difficulty {
+    display: flex;
+    gap: 8px;
+    margin: 6px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.diff-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 30px;
+    padding: 5px 16px;
+    color: #666;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.diff-btn.active {
+    border-color: #ffd700;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.06);
+}
+
+.diff-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ----- КНОПКА СТАРТ ----- */
+#startBtn {
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    border: none;
+    color: #1a1a2e;
+    padding: 14px 44px;
+    border-radius: 60px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-top: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 40px rgba(255, 215, 0, 0.15);
+    width: 100%;
+    max-width: 300px;
+    letter-spacing: 0.5px;
+}
+
+#startBtn:active {
+    transform: scale(0.94);
+}
+
+#startBtn:disabled {
+    opacity: 0.25;
+    transform: none;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ============================================================
+   ИГРОВОЙ ИНТЕРФЕЙС
+   ============================================================ */
+#scoreboard {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    z-index: 5;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+#scoreboard div {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 4px 16px;
+    border-radius: 40px;
+    backdrop-filter: blur(4px);
+}
+
+#timer {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: #ffd700;
+    padding: 4px 22px;
+    border-radius: 40px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    z-index: 5;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+}
+
+#matchScore {
+    position: absolute;
+    bottom: 120px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    z-index: 5;
+    pointer-events: none;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 4px 0;
+    backdrop-filter: blur(2px);
+}
+
+#winner {
+    position: absolute;
+    top: 30%;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #ffd700;
+    font-size: 3rem;
+    text-shadow: 0 0 60px rgba(0, 0, 0, 0.95);
+    z-index: 20;
+    pointer-events: none;
+    display: none;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 28px 0;
+    backdrop-filter: blur(8px);
+    border-top: 2px solid rgba(255, 215, 0, 0.1);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.1);
+}
+
+#winner .cup {
+    font-size: 4.5rem;
+    display: block;
+    margin-bottom: 4px;
+}
+
+#restartBtn {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #f7971e, #ffd200);
+    border: none;
+    color: #1a1a2e;
+    font-weight: 800;
+    padding: 14px 36px;
+    border-radius: 60px;
+    font-size: 1.1rem;
+    z-index: 30;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+    display: none;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+#restartBtn:active {
+    transform: translateX(-50%) scale(0.94);
+}
+
+#menuBtn {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 32px;
+    border-radius: 60px;
+    font-size: 1rem;
+    z-index: 30;
+    display: none;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: all 0.2s ease;
+}
+
+#menuBtn:active {
+    transform: translateX(-50%) scale(0.94);
+}
+
+/* ============================================================
+   УПРАВЛЕНИЕ (ДЖОЙСТИК + КНОПКИ)
+   ============================================================ */
+#joystick-area {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    width: 140px;
+    height: 140px;
+    border-radius: 70px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    z-index: 8;
+    display: none;
+    backdrop-filter: blur(4px);
+}
+
+#joystick-knob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.10);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.action-btn {
+    position: absolute;
+    bottom: 34px;
+    width: 72px;
+    height: 72px;
+    border-radius: 36px;
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    z-index: 8;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+    transition: all 0.12s ease;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(6px);
+}
+
+.action-btn:active {
+    transform: scale(0.90);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#kick-btn {
+    right: 104px;
+    border-color: rgba(255, 215, 0, 0.2);
+    color: #ffd700;
+}
+
+#pass-btn {
+    right: 28px;
+    border-color: rgba(0, 229, 255, 0.2);
+    color: #00e5ff;
+}
+
+#tackle-btn {
+    right: 180px;
+    border-color: rgba(255, 100, 100, 0.2);
+    color: #ff6b6b;
+}
+
+.action-btn .icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.action-btn .label {
+    font-size: 0.5rem;
+    opacity: 0.6;
+    margin-top: 1px;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   УВЕДОМЛЕНИЯ
+   ============================================================ */
+#notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.82);
+    color: #ffd700;
+    padding: 24px 34px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.10);
+    z-index: 50;
+    display: none;
+    text-align: center;
+    font-size: 1.3rem;
+    max-width: 80%;
+    backdrop-filter: blur(12px);
+    pointer-events: none;
+    box-shadow: 0 0 60px rgba(0, 0, 0, 0.6);
+}
+
+#notification .sub {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-top: 6px;
+    font-weight: 400;
+}
+
+/* ============================================================
+   АДАПТИВНОСТЬ (ДЛЯ ТЕЛЕФОНОВ)
+   ============================================================ */
+@media (max-width: 480px) {
+    .action-btn {
+        width: 62px;
+        height: 62px;
+        border-radius: 31px;
+        bottom: 24px;
+    }
+    #kick-btn {
+        right: 84px;
+    }
+    #pass-btn {
+        right: 20px;
+    }
+    #tackle-btn {
+        right: 148px;
+    }
+    #joystick-area {
+        width: 120px;
+        height: 120px;
+        bottom: 18px;
+        left: 18px;
+    }
+    #joystick-knob {
+        width: 50px;
+        height: 50px;
+    }
+    .logo {
+        font-size: 2.2rem;
+    }
+    #timer,
+    #scoreboard {
+        font-size: 1.0rem;
+    }
+    .players {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px;
+    }
+    .player-card .number {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .action-btn {
+        width: 54px;
+        height: 54px;
+        border-radius: 27px;
+        bottom: 18px;
+    }
+    #kick-btn {
+        right: 68px;
+    }
+    #pass-btn {
+        right: 14px;
+    }
+    #tackle-btn {
+        right: 122px;
+    }
+    #joystick-area {
+        width: 100px;
+        height: 100px;
+        bottom: 14px;
+        left: 14px;
+    }
+    #joystick-knob {
+        width: 42px;
+        height: 42px;
+    }
+    .menu-tab {
+        font-size: 0.65rem;
+        padding: 6px 12px;
+    }
+}
