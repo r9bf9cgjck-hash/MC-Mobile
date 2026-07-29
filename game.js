@@ -1,3 +1,7 @@
+// ============================================================
+//  MC MOBILE — game.js (ГЛАВНЫЙ МОДУЛЬ)
+// ============================================================
+
 const GameState = { MENU: 'menu', PLAYING: 'playing', ENDED: 'ended' };
 let game = {
     state: GameState.MENU, matchActive: false, timer: 60, timerInterval: null,
