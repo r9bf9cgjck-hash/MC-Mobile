@@ -66,7 +66,6 @@ function updateBots() {
             p.targetY = p.y + (Math.random()-0.5)*80;
         }
 
-        const W=600, H=800, goalA = window.goalA || {x:15,y:360,w:16,h:80}, goalB = window.goalB || {x:553,y:360,w:16,h:80};
         if (p.isGoalkeeper) {
             const goal = p.team === 'A' ? goalA : goalB;
             p.x = Math.max(goal.x-50, Math.min(goal.x+goal.w+50, p.x));
