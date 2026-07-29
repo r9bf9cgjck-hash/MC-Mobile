@@ -1,53 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MC Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC MOBILE</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="game-wrapper">
-    <div id="splash-screen">
-        <div class="splash-content">
-            <img src="https://i.ibb.co/tpCDN1BQ/68C31D01-A107-46B8-9B73-01956509E301.webp" alt="MC Mobile">
-            <button id="splash-btn">▶️ НАЧАТЬ</button>
+
+    <!-- ОБЛОЖКА -->
+    <div id="coverScreen">
+
+        <img id="coverImage" src="cover.jpg" alt="MC MOBILE">
+
+        <div id="coverOverlay">
+
+            <h1>MC MOBILE</h1>
+
+            <p>Season 1</p>
+
+            <button id="startButton">
+                ▶ НАЧАТЬ
+            </button>
+
         </div>
+
     </div>
-    <div id="menu">
-        <div class="logo">⚽ MC<br><small>MOBILE</small></div>
-        <div class="mode-select">
-            <button class="mode-btn active" data-mode="2v2">2×2</button>
-            <button class="mode-btn" data-mode="3v3">3×3</button>
+
+    <!-- ГЛАВНОЕ МЕНЮ -->
+    <div id="mainMenu" class="hidden">
+
+        <h1>MC MOBILE</h1>
+
+        <div class="menuButtons">
+
+            <button id="quickMatch">
+                ⚽ Быстрый матч
+            </button>
+
+            <button id="career">
+                🏆 Карьера
+            </button>
+
+            <button id="division">
+                ⭐ Дивизион
+            </button>
+
+            <button id="packs">
+                📦 Паки
+            </button>
+
+            <button id="settings">
+                ⚙ Настройки
+            </button>
+
         </div>
-        <div style="font-size:0.7rem; color:#555; margin:6px 0; letter-spacing:0.5px;">ВЫБЕРИ ИГРОКА</div>
-        <div class="players" id="player-list"></div>
-        <div class="difficulty">
-            <button class="diff-btn" data-diff="easy" disabled>🟢 Лёгкий</button>
-            <button class="diff-btn" data-diff="medium" disabled>🟡 Средний</button>
-            <button class="diff-btn" data-diff="hard" disabled>🔴 Сложный</button>
-            <button class="diff-btn" data-diff="extreme" disabled>🔥 Хардкор</button>
-        </div>
-        <button id="startBtn" disabled>⚔️ НАЧАТЬ МАТЧ</button>
+
     </div>
-    <canvas id="gameCanvas" width="600" height="800"></canvas>
-    <div id="scoreboard"><div id="scoreA">0</div><div id="scoreB">0</div></div>
-    <div id="timer">⏱️ 1:00</div>
-    <div id="matchScore">⚽ Счёт матча: 0 : 0</div>
-    <div id="winner"><span class="cup">🏆</span>ПОБЕДА!</div>
-    <button id="restartBtn">🔁 Играть снова</button>
-    <button id="menuBtn">🏠 В меню</button>
-    <div id="joystick-area"><div id="joystick-knob"></div></div>
-    <div class="action-btn" id="kick-btn"><span class="icon">⚽</span><span class="label">Удар</span></div>
-    <div class="action-btn" id="pass-btn"><span class="icon">🎯</span><span class="label">Пас</span></div>
-    <div class="action-btn" id="tackle-btn"><span class="icon">🛡️</span><span class="label">Отбор</span></div>
-    <div id="notification"><div id="notifText">🎉</div><div class="sub" id="notifSub"></div></div>
-</div>
+
+    <!-- ЭКРАН ВЫБОРА ИГРОКА -->
+    <div id="playerSelect" class="hidden">
+
+        <h2>Выберите игрока</h2>
+
+        <div id="playersGrid">
+
+        </div>
+
+    </div>
+
+    <!-- ЭКРАН ИГРЫ -->
+    <div id="gameScreen" class="hidden">
+
+        <div id="scoreBoard">
+
+            <span id="team1">
+                FC Masters
+            </span>
+
+            <span id="score">
+                0 : 0
+            </span>
+
+            <span id="team2">
+                Real Shamil
+            </span>
+
+        </div>
+
+        <div id="timer">
+
+            01:00
+
+        </div>
+
+        <canvas id="gameCanvas"
+                width="1200"
+                height="650">
+
+        </canvas>
+
+    </div>
+
+    <!-- ЭКРАН ПОСЛЕ МАТЧА -->
+    <div id="resultScreen" class="hidden">
+
+        <h1 id="resultTitle">
+
+            Финальный свисток
+
+        </h1>
+
+        <h2 id="finalScore">
+
+            0 : 0
+
+        </h2>
+
+        <button id="playAgain">
+
+            Играть снова
+
+        </button>
+
+        <button id="backMenu">
+
+            Главное меню
+
+        </button>
+
+    </div>
 
 <script src="players.js"></script>
 <script src="physics.js"></script>
 <script src="bot.js"></script>
 <script src="ui.js"></script>
 <script src="game.js"></script>
+
 </body>
 </html>
