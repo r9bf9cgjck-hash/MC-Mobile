@@ -7,10 +7,6 @@ const PLAYER_DB = {
     5: { id: 5, name: 'Абдул', number: '5', color: '#8d6e63', rating: 65, role: 'defender', team: 'A' }
 };
 
-function getPlayerRating(id) { return PLAYER_DB[id] ? PLAYER_DB[id].rating : 50; }
-function getPlayerSpeed(rating) { return 1.0 + (rating - 50) * 0.0816; }
-function getPlayerPower(rating) { return 2.8 + (rating - 50) * 0.057; }
-
 function buildPlayerMenu() {
     const list = document.getElementById('player-list');
     if (!list) return;
@@ -48,9 +44,9 @@ function initPlayers() {
         const rating = p.rating;
         const data = {
             ...p, rating, isPlayer: p.id === selectedId, team: isA ? 'A' : 'B',
-            isGoalkeeper: false, speed: getPlayerSpeed(rating)*1.8, power: getPlayerPower(rating)*1.2,
-            x: 0, y: 0, targetX: 0, targetY: 0, r: 18, stamina: 1.0, aggression: 0.5 + Math.random()*0.3,
-            hasBall: false, direction: isA ? 1 : -1
+            isGoalkeeper: false, speed: 1.6 * (1 + (rating-50)*0.08), power: 3.5 * (1 + (rating-50)*0.06),
+            x: 0, y: 0, targetX: 0, targetY: 0, r: 18, stamina: 1.0,
+            aggression: 0.5 + Math.random()*0.3, hasBall: false, direction: isA ? 1 : -1
         };
         if (isA) teamA_data.push(data);
         else teamB_data.push(data);
@@ -64,19 +60,19 @@ function initPlayers() {
         p.targetY = p.y + (Math.random()-0.5)*100;
     });
     teamB_data.forEach((p,i) => {
-        p.x = 460; p.y = 180 + spacingB*(i+1);
+        p.x = W - 140; p.y = 180 + spacingB*(i+1);
         p.targetX = p.x + (Math.random()-0.5)*100;
         p.targetY = p.y + (Math.random()-0.5)*100;
     });
 
-    if (teamA_data.length > 0) { const gkA = teamA_data[0]; gkA.isGoalkeeper = true; gkA.x = 40; gkA.y = 400; }
-    if (teamB_data.length > 0) { const gkB = teamB_data[0]; gkB.isGoalkeeper = true; gkB.x = 560; gkB.y = 400; }
+    if (teamA_data.length > 0) { const gkA = teamA_data[0]; gkA.isGoalkeeper = true; gkA.x = 40; gkA.y = H/2; }
+    if (teamB_data.length > 0) { const gkB = teamB_data[0]; gkB.isGoalkeeper = true; gkB.x = W-40; gkB.y = H/2; }
 
     const my = [...teamA_data, ...teamB_data].find(p => p.isPlayer);
     if (my && my.isGoalkeeper) {
         my.isGoalkeeper = false;
         my.x = 180 + (my.team === 'A' ? 0 : 200);
-        my.y = 400 + (Math.random()-0.5)*40;
+        my.y = H/2 + (Math.random()-0.5)*40;
     }
 
     window.allPlayers = [...teamA_data, ...teamB_data];
